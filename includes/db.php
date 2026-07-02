@@ -11,9 +11,10 @@ $db_name = getenv('DB_NAME');
 $db_user = getenv('DB_USER');
 $db_pass = getenv('DB_PASS');
 $db_port = getenv('DB_PORT');
+$db_driver = getenv('DB_DRIVER');
 
 try {
-    $dsn = "pgsql:host=$db_host;port=$db_port;dbname=$db_name";
+    $dsn = "$db_driver:host=$db_host;port=$db_port;dbname=$db_name";
     $pdo = new PDO($dsn, $db_user, $db_pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Set default fetch mode to associative array
