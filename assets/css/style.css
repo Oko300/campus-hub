@@ -1,0 +1,58 @@
+/* Custom styles for CampusHub */
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+}
+
+/* Navbar adjustments */
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Footer styling */
+footer {
+    margin-top: auto; /* Pushes the footer to the bottom */
+}
+
+/* Flash messages */
+.alert {
+    margin-top: 1rem;
+}
+
+/* Basic card styling for content */
+.card {
+    margin-bottom: 1rem;
+}
+
+/* Admin dashboard specific styles (can be moved to admin/assets/css/admin.css later if needed) */
+.admin-sidebar {
+    background-color: #343a40; /* Dark background */
+    color: white;
+    padding-top: 1rem;
+    min-height: calc(100vh - 56px); /* Adjust based on navbar height */
+}
+
+.admin-sidebar .nav-link {
+    color: #adb5bd; /* Lighter text for links */
+    padding: 0.75rem 1rem;
+}
+
+.admin-sidebar .nav-link:hover {
+    color: white;
+    background-color: #495057;
+}
+
+.admin-sidebar .nav-link.active {
+    color: white;
+    background-color: #007bff; /* Active link highlight */
+}
+
+.admin-content {
+    padding: 1.5rem;
+}
