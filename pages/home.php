@@ -4,14 +4,14 @@ require_once __DIR__ . '/../includes/db.php'; // For database access
 require_once __DIR__ . '/../includes/functions.php'; // For utility functions
 ?>
 
-<div class="jumbotron text-center bg-light p-5 rounded mb-4">
-    <h1 class="display-4">Welcome to CampusHub!</h1>
-    <p class="lead">Your one-stop portal for campus news, gists, past questions, and discussions.</p>
-    <hr class="my-4">
-    <p>Stay informed, share your thoughts, and ace your exams!</p>
-    <?php if (!isLoggedIn()): ?>
-        <a class="btn btn-primary btn-lg" href="/register" role="button">Join Us Today</a>
-    <?php endif; ?>
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4">Welcome to CampusHub!</h1>
+        <p class="lead">Your one-stop portal for verified news, campus gists, past questions, and vibrant discussions.</p>
+        <?php if (!isLoggedIn()): ?>
+            <a class="btn btn-primary btn-lg" href="/register" role="button">Join Us Today</a>
+        <?php endif; ?>
+    </div>
 </div>
 
 <div class="row">

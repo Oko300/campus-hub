@@ -1,46 +1,231 @@
 /* Custom styles for CampusHub */
 
+:root {
+    --primary-blue: #0d6efd;
+    --accent-teal: #20c997; /* A nice teal */
+    --accent-orange: #fd7e14; /* A vibrant orange */
+    --text-dark: #212529;
+    --text-light: #f8f9fa;
+    --bg-light: #ffffff;
+    --bg-dark: #343a40;
+    --border-light: #dee2e6;
+    --shadow-sm: rgba(0, 0, 0, 0.05);
+    --shadow-md: rgba(0, 0, 0, 0.1);
+}
+
 body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #f0f2f5; /* Light grey background for the whole page */
+    color: var(--text-dark);
 }
 
 main {
     flex: 1;
+    padding-top: 20px; /* Add some padding to the top of the main content */
+    padding-bottom: 20px; /* Add some padding to the bottom of the main content */
 }
 
 /* Navbar adjustments */
-.navbar-brand {
-    font-weight: bold;
+.navbar {
+    background-color: var(--primary-blue) !important; /* Deep blue navbar */
+    box-shadow: 0 2px 4px var(--shadow-md);
 }
 
-/* Footer styling */
-footer {
-    margin-top: auto; /* Pushes the footer to the bottom */
+.navbar-brand {
+    font-weight: bold;
+    color: var(--text-light) !important;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    color: var(--text-light) !important;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--accent-teal) !important; /* Teal hover effect */
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-outline-light {
+    color: var(--text-light);
+    border-color: var(--text-light);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-light:hover {
+    background-color: var(--accent-teal);
+    color: var(--bg-dark);
+    border-color: var(--accent-teal);
+}
+
+/* Hero Section Styling (for homepage) */
+.hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/assets/images/campus-bg.jpg') no-repeat center center; /* Placeholder image */
+    background-size: cover;
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px var(--shadow-md);
+}
+
+.hero-section h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    margin-bottom: 30px;
+}
+
+.hero-section .btn {
+    font-size: 1.1rem;
+    padding: 12px 30px;
+    border-radius: 50px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-section .btn-primary {
+    background-color: var(--accent-teal);
+    border-color: var(--accent-teal);
+}
+
+.hero-section .btn-primary:hover {
+    background-color: #1a9b75; /* Darker teal */
+    border-color: #1a9b75;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px var(--shadow-md);
+}
+
+/* Card styling for content */
+.card {
+    margin-bottom: 1.5rem;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px var(--shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px var(--shadow-md);
+}
+
+.card-header {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-weight: 600;
+}
+
+.card-body {
+    background-color: var(--bg-light);
+}
+
+.card-title {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+.card-text {
+    color: var(--text-dark);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0a58ca; /* Darker blue */
+    border-color: #0a58ca;
+}
+
+.btn-success {
+    background-color: var(--accent-teal);
+    border-color: var(--accent-teal);
+}
+
+.btn-success:hover {
+    background-color: #1a9b75;
+    border-color: #1a9b75;
+}
+
+.btn-warning {
+    background-color: var(--accent-orange);
+    border-color: var(--accent-orange);
+    color: white; /* Ensure text is readable on orange */
+}
+
+.btn-warning:hover {
+    background-color: #cb6a11;
+    border-color: #cb6a11;
+}
+
+/* Forms */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid var(--border-light);
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
 /* Flash messages */
 .alert {
     margin-top: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px var(--shadow-sm);
 }
 
-/* Basic card styling for content */
-.card {
-    margin-bottom: 1rem;
+/* Footer styling */
+footer {
+    margin-top: auto; /* Pushes the footer to the bottom */
+    background-color: var(--bg-dark); /* Dark background for footer */
+    color: var(--text-light);
+    padding: 20px 0;
+    box-shadow: 0 -2px 4px var(--shadow-md);
 }
 
-/* Admin dashboard specific styles (can be moved to admin/assets/css/admin.css later if needed) */
+footer a {
+    color: var(--accent-teal);
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: var(--text-light);
+}
+
+/* Admin dashboard specific styles */
 .admin-sidebar {
-    background-color: #343a40; /* Dark background */
+    background-color: var(--bg-dark); /* Dark background */
     color: white;
     padding-top: 1rem;
     min-height: calc(100vh - 56px); /* Adjust based on navbar height */
+    box-shadow: 2px 0 5px var(--shadow-md);
 }
 
 .admin-sidebar .nav-link {
     color: #adb5bd; /* Lighter text for links */
     padding: 0.75rem 1rem;
+    transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .admin-sidebar .nav-link:hover {
@@ -50,9 +235,27 @@ footer {
 
 .admin-sidebar .nav-link.active {
     color: white;
-    background-color: #007bff; /* Active link highlight */
+    background-color: var(--primary-blue); /* Active link highlight */
 }
 
 .admin-content {
     padding: 1.5rem;
+    background-color: #f8f9fa; /* Light background for admin content */
 }
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+    .hero-section p {
+        font-size: 1rem;
+    }
+    .admin-sidebar {
+        min-height: auto;
+    }
+}
+
+/* Utility classes for spacing */
+.my-4 { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; }
+.py-4 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }

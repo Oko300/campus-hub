@@ -31,6 +31,15 @@ switch ($request_uri) {
     case '/thread':
         require __DIR__ . '/pages/thread.php';
         break;
+    case '/login':
+        require __DIR__ . '/pages/login.php';
+        break;
+    case '/register':
+        require __DIR__ . '/pages/register.php';
+        break;
+    case '/logout':
+        require __DIR__ . '/pages/logout.php';
+        break;
     case '/search':
         require __DIR__ . '/pages/search.php';
         break;
