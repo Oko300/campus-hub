@@ -3,3 +3,4 @@
 /vendor/
 composer.lock
 litellm_config.yaml
+.env.example
