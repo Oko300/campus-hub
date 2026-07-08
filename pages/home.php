@@ -6,8 +6,8 @@ require_once __DIR__ . '/../includes/functions.php'; // For utility functions
 
 <div class="hero-section">
     <div class="container">
-        <h1 class="display-4">Welcome to CampusHub!</h1>
-        <p class="lead">Your one-stop portal for verified news, campus gists, past questions, and vibrant discussions.</p>
+        <h1 class="display-4">Welcome to Bing Hub!</h1>
+        <p class="lead typing-effect-text">Your Campus. One Hub.</p>
         <?php if (!isLoggedIn()): ?>
             <a class="btn btn-primary btn-lg" href="/register" role="button">Join Us Today</a>
         <?php endif; ?>

@@ -1,9 +1,8 @@
-/* Custom styles for CampusHub */
+/* Custom styles for Bing Hub */
 
 :root {
-    --primary-blue: #0d6efd;
-    --accent-teal: #20c997; /* A nice teal */
-    --accent-orange: #fd7e14; /* A vibrant orange */
+    --navy: #1a3a5c;
+    --gold: #f5a623;
     --text-dark: #212529;
     --text-light: #f8f9fa;
     --bg-light: #ffffff;
@@ -20,6 +19,7 @@ body {
     min-height: 100vh;
     background-color: #f0f2f5; /* Light grey background for the whole page */
     color: var(--text-dark);
+    overflow-x: hidden; /* Prevent horizontal scroll due to animations */
 }
 
 main {
@@ -30,8 +30,10 @@ main {
 
 /* Navbar adjustments */
 .navbar {
-    background-color: var(--primary-blue) !important; /* Deep blue navbar */
+    background-color: var(--navy) !important; /* Deep blue navbar */
     box-shadow: 0 2px 4px var(--shadow-md);
+    position: relative;
+    z-index: 10; /* Ensure navbar is above canvas */
 }
 
 .navbar-brand {
@@ -46,7 +48,7 @@ main {
 }
 
 .navbar-nav .nav-link:hover {
-    color: var(--accent-teal) !important; /* Teal hover effect */
+    color: var(--gold) !important; /* Gold hover effect */
 }
 
 .navbar-toggler {
@@ -60,27 +62,52 @@ main {
 }
 
 .btn-outline-light:hover {
-    background-color: var(--accent-teal);
-    color: var(--bg-dark);
-    border-color: var(--accent-teal);
+    background-color: var(--gold);
+    color: var(--navy);
+    border-color: var(--gold);
+}
+
+/* Particle Canvas */
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* Behind other content */
 }
 
 /* Hero Section Styling (for homepage) */
 .hero-section {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/assets/images/campus-bg.jpg') no-repeat center center; /* Placeholder image */
-    background-size: cover;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(45deg, var(--navy), #2a527a, var(--navy)); /* Animated gradient */
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     color: white;
     padding: 80px 0;
     text-align: center;
     margin-bottom: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px var(--shadow-md);
+    min-height: 400px; /* Ensure enough space for particles */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1; /* Above canvas */
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2; /* Ensure text is above floating icons */
 }
 
 .hero-section h1 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 15px;
+    position: relative;
+    display: inline-block;
 }
 
 .hero-section p {
@@ -96,16 +123,66 @@ main {
 }
 
 .hero-section .btn-primary {
-    background-color: var(--accent-teal);
-    border-color: var(--accent-teal);
+    background-color: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
 }
 
 .hero-section .btn-primary:hover {
-    background-color: #1a9b75; /* Darker teal */
-    border-color: #1a9b75;
+    background-color: #e0951f; /* Darker gold */
+    border-color: #e0951f;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px var(--shadow-md);
 }
+
+/* Animated Gradient Background */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Floating Icons */
+.floating-icon {
+    position: absolute;
+    font-size: 3rem;
+    color: rgba(245, 166, 35, 0.7); /* Gold with transparency */
+    animation: float 10s ease-in-out infinite;
+    pointer-events: none; /* Allow clicks to pass through */
+    z-index: 1;
+}
+
+.floating-icon:nth-child(2) { animation-delay: 2s; }
+.floating-icon:nth-child(3) { animation-delay: 4s; }
+
+@keyframes float {
+    0% { transform: translateY(0px); opacity: 0.7; }
+    50% { transform: translateY(-20px); opacity: 1; }
+    100% { transform: translateY(0px); opacity: 0.7; }
+}
+
+/* Typing Effect */
+.typing-effect-text {
+    display: inline-block;
+    overflow: hidden; /* Ensures the text appears character by character */
+    white-space: nowrap; /* Keeps the text on a single line */
+    border-right: .15em solid var(--gold); /* The typing cursor */
+    animation:
+        typing 3.5s steps(40, end) forwards,
+        blink-caret .75s step-end infinite;
+    width: 0; /* Start with no width */
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: var(--gold); }
+}
+
 
 /* Card styling for content */
 .card {
@@ -118,11 +195,11 @@ main {
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 4px 12px var(--shadow-md);
+    box-shadow: 0 8px 16px var(--shadow-md); /* Enhanced shadow on hover */
 }
 
 .card-header {
-    background-color: var(--primary-blue);
+    background-color: var(--navy);
     color: var(--text-light);
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
     border-top-left-radius: 8px;
@@ -135,7 +212,7 @@ main {
 }
 
 .card-title {
-    color: var(--primary-blue);
+    color: var(--navy);
     font-weight: 600;
 }
 
@@ -145,35 +222,36 @@ main {
 
 /* Buttons */
 .btn-primary {
-    background-color: var(--primary-blue);
-    border-color: var(--primary-blue);
+    background-color: var(--navy);
+    border-color: var(--navy);
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .btn-primary:hover {
-    background-color: #0a58ca; /* Darker blue */
-    border-color: #0a58ca;
+    background-color: #122a42; /* Darker navy */
+    border-color: #122a42;
 }
 
 .btn-success {
-    background-color: var(--accent-teal);
-    border-color: var(--accent-teal);
+    background-color: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy);
 }
 
 .btn-success:hover {
-    background-color: #1a9b75;
-    border-color: #1a9b75;
+    background-color: #e0951f;
+    border-color: #e0951f;
 }
 
 .btn-warning {
-    background-color: var(--accent-orange);
-    border-color: var(--accent-orange);
-    color: white; /* Ensure text is readable on orange */
+    background-color: var(--gold);
+    border-color: var(--gold);
+    color: var(--navy); /* Ensure text is readable on gold */
 }
 
 .btn-warning:hover {
-    background-color: #cb6a11;
-    border-color: #cb6a11;
+    background-color: #e0951f;
+    border-color: #e0951f;
 }
 
 /* Forms */
@@ -184,8 +262,8 @@ main {
 }
 
 .form-control:focus {
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    border-color: var(--navy);
+    box-shadow: 0 0 0 0.25rem rgba(26, 58, 92, 0.25);
 }
 
 /* Flash messages */
@@ -205,7 +283,7 @@ footer {
 }
 
 footer a {
-    color: var(--accent-teal);
+    color: var(--gold);
     text-decoration: none;
 }
 
@@ -235,7 +313,7 @@ footer a:hover {
 
 .admin-sidebar .nav-link.active {
     color: white;
-    background-color: var(--primary-blue); /* Active link highlight */
+    background-color: var(--navy); /* Active link highlight */
 }
 
 .admin-content {
@@ -259,3 +337,50 @@ footer a:hover {
 /* Utility classes for spacing */
 .my-4 { margin-top: 1.5rem !important; margin-bottom: 1.5rem !important; }
 .py-4 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+
+/* Fade-in animations for sections */
+.fade-in-section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.fade-in-section.fade-in-up {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Pulse animation for stats numbers */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.card-text h3 {
+    animation: pulse 2s infinite;
+    display: inline-block; /* Required for transform to work */
+}
+
+/* Animated underline on section headings */
+h2 {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 3px;
+    background-color: var(--gold);
+    transition: width 0.6s ease-out;
+}
+
+h2:hover::after {
+    width: 100%;
+}
