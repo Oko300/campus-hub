@@ -1,5 +1,8 @@
 <?php
+ob_start();
 
+/**
+ * Loads environment variables from a .env file.
 /**
  * Loads environment variables from a .env file.
  * This function is a simple implementation and might not cover all edge cases
