@@ -13,7 +13,7 @@ $year = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = sanitizeInput($_POST['title'] ?? '');
-    $course = sanitizeInput($_POST['course'] ?? '');
+    $course = sanitizeInput($_POST['uploaded_course'] ?? '');
     $year = filter_input(INPUT_POST, 'year', FILTER_VALIDATE_INT);
 
     // Basic validation
@@ -55,13 +55,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO past_questions (title, course, year, file_path, uploader_id) VALUES (:title, :course, :year, :file_path, :uploader_id)");
+            $stmt = $pdo->prepare("INSERT INTO past_questions (title, uploaded_course, uploaded_year, file_path, uploaded_by) VALUES (:title, :uploaded_course, :uploaded_year, :file_path, :uploaded_by)");
             $stmt->execute([
                 ':title' => $title,
-                ':course' => $course,
-                ':year' => $year,
+                ':uploaded_course' => $course,
+                ':uploaded_year' => $year,
                 ':file_path' => $file_path,
-                ':uploader_id' => $_SESSION['user_id'] // Assuming admin is logged in
+                ':uploaded_by' => $_SESSION['user_id'] // Assuming admin is logged in
             ]);
             $_SESSION['success'] = 'Past question uploaded successfully!';
             redirect('/admin/past-questions');
@@ -93,25 +93,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="card">
             <div class="card-body">
-                <form action="/admin/past-questions/create" method="POST" enctype="multipart/form-data">
+                <form action="/admin/past-questions/create.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="title" class="form-label">Title</label>
                         <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="course" class="form-label">Course</label>
-                        <input type="text" class="form-control" id="course" name="course" value="<?php echo htmlspecialchars($course); ?>" required>
+                        <label for="uploaded_course" class="form-label">Course</label>
+                        <input type="text" class="form-control" id="course" name="uploaded_course" value="<?php echo htmlspecialchars($course); ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="year" class="form-label">Year</label>
-                        <input type="number" class="form-control" id="year" name="year" value="<?php echo htmlspecialchars($year); ?>" min="1900" max="<?php echo date('Y') + 5; ?>" required>
+                        <label for="uploaded_year" class="form-label">Year</label>
+                        <input type="number" class="form-control" id="year" name="uploaded_year" value="<?php echo htmlspecialchars($year); ?>" min="1900" max="<?php echo date('Y') + 5; ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="question_file" class="form-label">Question File (PDF, DOC, DOCX, JPG, PNG)</label>
                         <input type="file" class="form-control" id="question_file" name="question_file" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Upload Question</button>
-                    <a href="/admin/past-questions" class="btn btn-secondary">Cancel</a>
+                    <a href="/admin/past-questions/index.php" class="btn btn-secondary">Cancel</a>
                 </form>
             </div>
         </div>

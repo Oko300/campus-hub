@@ -8,7 +8,7 @@ requireAdmin(); // Only admins can access this page
 
 // Fetch all past questions
 try {
-    $stmt = $pdo->query("SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploader_id = u.id ORDER BY pq.uploaded_at DESC");
+    $stmt = $pdo->query("SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id ORDER BY pq.uploaded_at DESC");
     $past_questions = $stmt->fetchAll();
 } catch (PDOException $e) {
     error_log("Error fetching past questions: " . $e->getMessage());
@@ -26,7 +26,7 @@ try {
     <div class="col-md-9">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Manage Past Questions</h2>
-            <a href="/admin/past-questions/create" class="btn btn-primary"><i class="fas fa-plus"></i> Upload New Question</a>
+            <a href="/admin/past-questions/create.php" class="btn btn-primary"><i class="fas fa-plus"></i> Upload New Question</a>
         </div>
 
         <?php flash('success'); ?>
@@ -65,7 +65,7 @@ try {
                                         <td><?php echo date('M d, Y H:i', strtotime($pq['uploaded_at'])); ?></td>
                                         <td>
                                             <a href="/uploads/<?php echo htmlspecialchars($pq['file_path']); ?>" class="btn btn-sm btn-info" target="_blank"><i class="fas fa-eye"></i> View</a>
-                                            <a href="/admin/past-questions/delete?id=<?php echo $pq['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this past question?');"><i class="fas fa-trash-alt"></i> Delete</a>
+                                            <a href="/admin/past-questions/delete.php?id=<?php echo $pq['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this past question?');"><i class="fas fa-trash-alt"></i> Delete</a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
