@@ -5,26 +5,21 @@ require_once __DIR__ . '/../includes/functions.php';
 
 // Search and filter logic
 $search_query = sanitizeInput($_GET['search'] ?? '');
-$course_filter = sanitizeInput($_GET['course'] ?? '');
-$year_filter = filter_input(INPUT_GET, 'uploaded_year', FILTER_VALIDATE_INT);
+$description_filter = sanitizeInput($_GET['description'] ?? '');
 
-$sql = "SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id WHERE 1=1";
+$sql = "SELECT pq.id, pq.title, pq.description, pq.file_path, pq.uploaded_by, pq.download_count, pq.created_at, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id WHERE 1=1";
 $params = [];
 
 if (!empty($search_query)) {
-    $sql .= " AND (pq.title ILIKE :search_query OR pq.uploaded_course ILIKE :search_query)";
+    $sql .= " AND (pq.title ILIKE :search_query OR pq.description ILIKE :search_query)";
     $params[':search_query'] = '%' . $search_query . '%';
 }
-if (!empty($course_filter)) {
-    $sql .= " AND pq.uploaded_course = :course_filter";
-    $params[':course_filter'] = $course_filter;
-}
-if ($year_filter) {
-    $sql .= " AND pq.uploaded_year = :year_filter";
-    $params[':year_filter'] = $year_filter;
+if (!empty($description_filter)) {
+    $sql .= " AND pq.description ILIKE :description_filter";
+    $params[':description_filter'] = '%' . $description_filter . '%';
 }
 
-$sql .= " ORDER BY pq.uploaded_at DESC";
+$sql .= " ORDER BY pq.created_at DESC";
 
 try {
     $stmt = $pdo->prepare($sql);
@@ -36,17 +31,13 @@ try {
     $past_questions = [];
 }
 
-// Fetch distinct courses and years for filters
+// Fetch distinct descriptions for filters
 try {
-    $courses_stmt = $pdo->query("SELECT DISTINCT uploaded_course FROM past_questions ORDER BY uploaded_course ASC");
-    $available_courses = $courses_stmt->fetchAll(PDO::FETCH_COLUMN);
-
-    $years_stmt = $pdo->query("SELECT DISTINCT uploaded_year FROM past_questions ORDER BY uploaded_year DESC");
-    $available_years = $years_stmt->fetchAll(PDO::FETCH_COLUMN);
+    $descriptions_stmt = $pdo->query("SELECT DISTINCT description FROM past_questions ORDER BY description ASC");
+    $available_descriptions = $descriptions_stmt->fetchAll(PDO::FETCH_COLUMN);
 } catch (PDOException $e) {
     error_log("Error fetching filter options: " . $e->getMessage());
-    $available_courses = [];
-    $available_years = [];
+    $available_descriptions = [];
 }
 
 ?>
@@ -63,21 +54,13 @@ try {
     <div class="card-body">
         <form action="/past-questions" method="GET" class="row g-3">
             <div class="col-md-4">
-                <input type="text" class="form-control" name="search" placeholder="Search by title or course" value="<?php echo htmlspecialchars($search_query); ?>">
+                <input type="text" class="form-control" name="search" placeholder="Search by title or description" value="<?php echo htmlspecialchars($search_query); ?>">
             </div>
             <div class="col-md-3">
-                <select name="uploaded_course" class="form-select">
-                    <option value="">All Courses</option>
-                    <?php foreach ($available_courses as $course): ?>
-                        <option value="<?php echo htmlspecialchars($course); ?>" <?php echo ($course_filter === $course) ? 'selected' : ''; ?>><?php echo htmlspecialchars($course); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-3">
-                <select name="uploaded_year" class="form-select">
-                    <option value="">All Years</option>
-                    <?php foreach ($available_years as $year): ?>
-                        <option value="<?php echo htmlspecialchars($year); ?>" <?php echo ($year_filter === (int)$year) ? 'selected' : ''; ?>><?php echo htmlspecialchars($year); ?></option>
+                <select name="description" class="form-select">
+                    <option value="">All Courses & Years</option>
+                    <?php foreach ($available_descriptions as $description): ?>
+                        <option value="<?php echo htmlspecialchars($description); ?>" <?php echo ($description_filter === $description) ? 'selected' : ''; ?>><?php echo htmlspecialchars($description); ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -97,8 +80,7 @@ try {
                         <thead>
                             <tr>
                                 <th>Title</th>
-                                <th>Course</th>
-                                <th>Year</th>
+                                <th>Course & Year</th>
                                 <th>Uploader</th>
                                 <th>Downloads</th>
                                 <th>Action</th>
@@ -107,14 +89,13 @@ try {
                         <tbody>
                             <?php if (empty($past_questions)): ?>
                                 <tr>
-                                    <td colspan="6" class="text-center">No past questions found matching your criteria.</td>
+                                    <td colspan="5" class="text-center">No past questions found matching your criteria.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($past_questions as $pq): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($pq['title']); ?></td>
-                                        <td><?php echo htmlspecialchars($pq['uploaded_course']); ?></td>
-                                        <td><?php echo htmlspecialchars($pq['uploaded_year']); ?></td>
+                                        <td><?php echo htmlspecialchars($pq['description']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['uploader_name']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['download_count']); ?></td>
                                         <td>

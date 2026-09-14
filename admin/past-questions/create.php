@@ -8,23 +8,18 @@ requireAdmin(); // Only admins can access this page
 
 $errors = [];
 $title = '';
-$course = '';
-$year = '';
+$description = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = sanitizeInput($_POST['title'] ?? '');
-    $course = sanitizeInput($_POST['uploaded_course'] ?? '');
-    $year = filter_input(INPUT_POST, 'uploaded_year', FILTER_VALIDATE_INT);
+    $description = sanitizeInput($_POST['description'] ?? '');
 
     // Basic validation
     if (empty($title)) {
         $errors[] = 'Title is required.';
     }
-    if (empty($course)) {
-        $errors[] = 'Course is required.';
-    }
-    if (!$year || $year < 1900 || $year > date('Y') + 5) { // Allow up to 5 years in the future for planning
-        $errors[] = 'Valid year is required.';
+    if (empty($description)) {
+        $errors[] = 'Description (Course & Year) is required.';
     }
 
     // File upload handling
@@ -58,13 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO past_questions (title, course, year, file_path, uploader_id) VALUES (:title, :course, :year, :file_path, :uploader_id)");
+            $stmt = $pdo->prepare("INSERT INTO past_questions (title, description, file_path, uploaded_by) VALUES (:title, :description, :file_path, :uploaded_by)");
             $stmt->execute([
                 ':title' => $title,
-                ':course' => $course,
-                ':year' => $year,
+                ':description' => $description,
                 ':file_path' => $file_path,
-                ':uploader_id' => $_SESSION['user_id'] // Assuming admin is logged in
+                ':uploaded_by' => $_SESSION['user_id'] // Assuming admin is logged in
             ]);
             $_SESSION['success'] = 'Past question uploaded successfully!';
             redirect('/admin/past-questions');
@@ -102,12 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($title); ?>" required>
                     </div>
                     <div class="mb-3">
-                        <label for="uploaded_course" class="form-label">Course</label>
-                        <input type="text" class="form-control" id="course" name="uploaded_course" value="<?php echo htmlspecialchars($course); ?>" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="uploaded_year" class="form-label">Year</label>
-                        <input type="number" class="form-control" id="year" name="uploaded_year" value="<?php echo htmlspecialchars($year); ?>" min="1900" max="<?php echo date('Y') + 5; ?>" required>
+                        <label for="description" class="form-label">Course & Year (e.g., BFN 327 - 2026)</label>
+                        <input type="text" class="form-control" id="description" name="description" value="<?php echo htmlspecialchars($description); ?>" required>
                     </div>
                     <div class="mb-3">
                         <label for="question_file" class="form-label">Question File (PDF, DOC, DOCX, JPG, PNG)</label>

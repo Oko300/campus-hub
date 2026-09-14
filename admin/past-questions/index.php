@@ -8,7 +8,7 @@ requireAdmin(); // Only admins can access this page
 
 // Fetch all past questions
 try {
-    $stmt = $pdo->query("SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id ORDER BY pq.uploaded_at DESC");
+    $stmt = $pdo->query("SELECT pq.id, pq.title, pq.description, pq.file_path, pq.uploaded_by, pq.download_count, pq.created_at, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id ORDER BY pq.created_at DESC");
     $past_questions = $stmt->fetchAll();
 } catch (PDOException $e) {
     error_log("Error fetching past questions: " . $e->getMessage());
@@ -40,8 +40,7 @@ try {
                             <tr>
                                 <th>#</th>
                                 <th>Title</th>
-                                <th>Course</th>
-                                <th>Year</th>
+                                <th>Course & Year</th>
                                 <th>Uploader</th>
                                 <th>Downloads</th>
                                 <th>Uploaded At</th>
@@ -51,14 +50,14 @@ try {
                         <tbody>
                             <?php if (empty($past_questions)): ?>
                                 <tr>
-                                    <td colspan="8" class="text-center">No past questions found.</td>
+                                    <td colspan="7" class="text-center">No past questions found.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($past_questions as $pq): ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($pq['id']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['title']); ?></td>
-                                        <td><?php echo htmlspecialchars($pq['course']); ?></td>
+                                        <td><?php echo htmlspecialchars($pq['description']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['year']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['uploader_name']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['download_count']); ?></td>
