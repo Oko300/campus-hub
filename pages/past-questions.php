@@ -8,7 +8,7 @@ $search_query = sanitizeInput($_GET['search'] ?? '');
 $course_filter = sanitizeInput($_GET['course'] ?? '');
 $year_filter = filter_input(INPUT_GET, 'year', FILTER_VALIDATE_INT);
 
-$sql = "SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploader_id = u.id WHERE 1=1";
+$sql = "SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id WHERE 1=1";
 $params = [];
 
 if (!empty($search_query)) {

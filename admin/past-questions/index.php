@@ -8,7 +8,7 @@ requireAdmin(); // Only admins can access this page
 
 // Fetch all past questions
 try {
-    $stmt = $pdo->query("SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploader_id = u.id ORDER BY pq.uploaded_at DESC");
+    $stmt = $pdo->query("SELECT pq.*, u.username as uploader_name FROM past_questions pq JOIN users u ON pq.uploaded_by = u.id ORDER BY pq.uploaded_at DESC");
     $past_questions = $stmt->fetchAll();
 } catch (PDOException $e) {
     error_log("Error fetching past questions: " . $e->getMessage());
