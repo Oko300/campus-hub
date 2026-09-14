@@ -58,13 +58,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($errors)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO past_questions (title, uploaded_course, uploaded_year, file_path, uploaded_by) VALUES (:title, :uploaded_course, :uploaded_year, :file_path, :uploaded_by)");
+            $stmt = $pdo->prepare("INSERT INTO past_questions (title, course, year, file_path, uploader_id) VALUES (:title, :course, :year, :file_path, :uploader_id)");
             $stmt->execute([
                 ':title' => $title,
-                ':uploaded_course' => $course,
-                ':uploaded_year' => $year,
+                ':course' => $course,
+                ':year' => $year,
                 ':file_path' => $file_path,
-                ':uploaded_by' => $_SESSION['user_id'] // Assuming admin is logged in
+                ':uploader_id' => $_SESSION['user_id'] // Assuming admin is logged in
             ]);
             $_SESSION['success'] = 'Past question uploaded successfully!';
             redirect('/admin/past-questions');
