@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once __DIR__ . '/functions.php';
 // No need to require db.php or auth.php here, as they are included where needed.
 // This header is for presentation, not direct database interaction or auth logic.
