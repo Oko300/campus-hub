@@ -14,7 +14,7 @@ $year = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = sanitizeInput($_POST['title'] ?? '');
     $course = sanitizeInput($_POST['uploaded_course'] ?? '');
-    $year = filter_input(INPUT_POST, 'year', FILTER_VALIDATE_INT);
+    $year = filter_input(INPUT_POST, 'uploaded_year', FILTER_VALIDATE_INT);
 
     // Basic validation
     if (empty($title)) {
@@ -40,6 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             $unique_file_name = uniqid('pq_', true) . '.' . $file_extension;
             $upload_dir = __DIR__ . '/../../uploads/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
             $destination = $upload_dir . $unique_file_name;
 
             if (!move_uploaded_file($file_tmp_name, $destination)) {
