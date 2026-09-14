@@ -99,7 +99,17 @@ try {
                                         <td><?php echo htmlspecialchars($pq['uploader_name']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['download_count']); ?></td>
                                         <td>
-                                            <a href="/download?type=past_question&id=<?php echo $pq['id']; ?>" class="btn btn-sm btn-success"><i class="fas fa-download"></i> Download</a>
+                                            <?php
+                                            $file_extension = strtolower(pathinfo($pq['file_path'], PATHINFO_EXTENSION));
+                                            $image_extensions = ['jpg', 'jpeg', 'png'];
+                                            $file_url = '/uploads/' . htmlspecialchars($pq['file_path']);
+                                            ?>
+                                            <a href="<?= $file_url ?>" target="_blank" class="btn btn-sm btn-info me-2"><i class="fas fa-eye"></i> View / Download</a>
+                                            <?php if (in_array($file_extension, $image_extensions)): ?>
+                                                <a href="<?= $file_url ?>" target="_blank">
+                                                    <img src="<?= $file_url ?>" alt="Thumbnail" style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

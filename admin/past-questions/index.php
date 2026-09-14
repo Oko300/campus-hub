@@ -50,7 +50,7 @@ try {
                         <tbody>
                             <?php if (empty($past_questions)): ?>
                                 <tr>
-                                    <td colspan="7" class="text-center">No past questions found.</td>
+                                    <td colspan="6" class="text-center">No past questions found.</td>
                                 </tr>
                             <?php else: ?>
                                 <?php foreach ($past_questions as $pq): ?>
@@ -58,10 +58,9 @@ try {
                                         <td><?php echo htmlspecialchars($pq['id']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['title']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['description']); ?></td>
-                                        <td><?php echo htmlspecialchars($pq['year']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['uploader_name']); ?></td>
                                         <td><?php echo htmlspecialchars($pq['download_count']); ?></td>
-                                        <td><?php echo date('M d, Y H:i', strtotime($pq['uploaded_at'])); ?></td>
+                                        <td><?php echo date('M d, Y H:i', strtotime($pq['created_at'])); ?></td>
                                         <td>
                                             <a href="/uploads/<?php echo htmlspecialchars($pq['file_path']); ?>" class="btn btn-sm btn-info" target="_blank"><i class="fas fa-eye"></i> View</a>
                                             <a href="/admin/past-questions/delete.php?id=<?php echo $pq['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this past question?');"><i class="fas fa-trash-alt"></i> Delete</a>
