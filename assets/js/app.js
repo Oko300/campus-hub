@@ -1,14 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Particle Animation System
     const canvas = document.getElementById('particle-canvas');
-    if (canvas) {
+    const heroSectionEl = document.querySelector('.hero-section'); // Fix: check first
+
+    if (canvas && heroSectionEl) { // Fix: only run if BOTH exist
         const ctx = canvas.getContext('2d');
         let particles = [];
         const particleCount = 100;
         const colors = ['#1a3a5c', '#f5a623']; // Navy and Gold
 
         canvas.width = window.innerWidth;
-        canvas.height = document.querySelector('.hero-section').offsetHeight; // Cover hero section
+        canvas.height = heroSectionEl.offsetHeight; // Fix: use variable
 
         function Particle(x, y, radius, color, velocity) {
             this.x = x;
@@ -67,11 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const p2 = particles[j];
                     const distance = Math.sqrt((p1.x - p2.x)**2 + (p1.y - p2.y)**2);
 
-                    if (distance < 100) { // Connect particles within 100px
+                    if (distance < 100) {
                         ctx.beginPath();
                         ctx.moveTo(p1.x, p1.y);
                         ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(26, 58, 92, ${1 - (distance / 100)})`; // Navy with fading opacity
+                        ctx.strokeStyle = `rgba(26, 58, 92, ${1 - (distance / 100)})`;
                         ctx.lineWidth = 0.5;
                         ctx.stroke();
                     }
@@ -81,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth;
-            canvas.height = document.querySelector('.hero-section').offsetHeight;
+            canvas.height = heroSectionEl.offsetHeight; // Fix: use variable
             initParticles();
         });
 
@@ -94,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const originalText = "Your Campus. One Hub.";
     let i = 0;
     let isDeleting = false;
-    let typingSpeed = 150; // milliseconds
+    let typingSpeed = 150;
 
     function typeWriter() {
         if (!heroHeading) return;
@@ -109,12 +111,11 @@ document.addEventListener('DOMContentLoaded', () => {
             i--;
             typingSpeed = 75;
         } else if (!isDeleting && i === originalText.length) {
-            // Pause at the end of typing
             isDeleting = true;
-            typingSpeed = 2000; // Longer pause before deleting
+            typingSpeed = 2000;
         } else if (isDeleting && i === 0) {
             isDeleting = false;
-            typingSpeed = 500; // Pause before re-typing
+            typingSpeed = 500;
         }
 
         setTimeout(typeWriter, typingSpeed);
@@ -132,19 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (charIndex < typingEffectText.length) {
                 typingTextElement.textContent += typingEffectText.charAt(charIndex);
                 charIndex++;
-                setTimeout(type, 100); // Typing speed
+                setTimeout(type, 100);
             }
         }
         type();
     }
 
-
     // Animated Counting Numbers in Stats Bar
     const statsNumbers = document.querySelectorAll('.card-text h3');
     const animateCount = (element, target) => {
         let count = 0;
-        const duration = 2000; // 2 seconds
-        const increment = target / (duration / 16); // ~60fps
+        const duration = 2000;
+        const increment = target / (duration / 16);
 
         const updateCount = () => {
             count += increment;
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const observerOptions = {
         root: null,
         rootMargin: '0px',
-        threshold: 0.5 // Trigger when 50% of the item is visible
+        threshold: 0.5
     };
 
     const sectionObserver = new IntersectionObserver((entries, observer) => {
@@ -173,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, observerOptions);
 
-    // Apply fade-in to sections
     document.querySelectorAll('.row:not(.hero-section .row), .mt-5.mb-3').forEach(section => {
         section.classList.add('fade-in-section');
         sectionObserver.observe(section);
