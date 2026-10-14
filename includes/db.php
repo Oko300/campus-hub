@@ -6,19 +6,30 @@ if (!function_exists('loadEnv')) {
     loadEnv();
 }
 
-$db_host = getenv('DB_HOST');
-$db_name = getenv('DB_NAME');
-$db_user = getenv('DB_USER');
-$db_pass = getenv('DB_PASS');
-$db_port = getenv('DB_PORT');
-$db_driver = getenv('DB_DRIVER');
+$db_host = getenv('DB_HOST') ?: '';
+$db_name = getenv('DB_NAME') ?: '';
+$db_user = getenv('DB_USER') ?: '';
+$db_pass = getenv('DB_PASS') ?: '';
+$db_port = getenv('DB_PORT') ?: '5432';
+$db_driver = getenv('DB_DRIVER') ?: 'pgsql';
+
+// Temporary debug – remove after connection works
+if (isset($_GET['dbdebug'])) {
+    header('Content-Type: text/plain');
+    echo "DB_HOST: " . $db_host . "\n";
+    echo "DB_PORT: " . $db_port . "\n";
+    echo "DB_NAME: " . $db_name . "\n";
+    echo "DB_USER: " . $db_user . "\n";
+    echo "DB_PASS length: " . strlen($db_pass) . "\n";
+    echo "DB_DRIVER: " . $db_driver . "\n";
+    exit;
+}
 
 try {
     // sslmode=require is needed for Supabase
     $dsn = "$db_driver:host=$db_host;port=$db_port;dbname=$db_name;sslmode=require";
     $pdo = new PDO($dsn, $db_user, $db_pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    // Set default fetch mode to associative array
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
     // Auto-create tables if they don't exist
@@ -81,8 +92,7 @@ CREATE TABLE IF NOT EXISTS forum_replies (
 );
 ");
 } catch (PDOException $e) {
-    // Log the error for debugging
     error_log("Database connection error: " . $e->getMessage());
-    // Display a user-friendly error message
-    die("Could not connect to the database. Please try again later.");
+    // Show more useful error temporarily
+    die("Could not connect to the database.<br><br><strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "<br><br>Host: " . htmlspecialchars($db_host) . " | User: " . htmlspecialchars($db_user) . " | Port: " . htmlspecialchars($db_port));
 }
