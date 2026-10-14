@@ -13,18 +13,6 @@ $db_pass = getenv('DB_PASS') ?: '';
 $db_port = getenv('DB_PORT') ?: '5432';
 $db_driver = getenv('DB_DRIVER') ?: 'pgsql';
 
-// Temporary debug – remove after connection works
-if (isset($_GET['dbdebug'])) {
-    header('Content-Type: text/plain');
-    echo "DB_HOST: " . $db_host . "\n";
-    echo "DB_PORT: " . $db_port . "\n";
-    echo "DB_NAME: " . $db_name . "\n";
-    echo "DB_USER: " . $db_user . "\n";
-    echo "DB_PASS length: " . strlen($db_pass) . "\n";
-    echo "DB_DRIVER: " . $db_driver . "\n";
-    exit;
-}
-
 try {
     // sslmode=require is needed for Supabase
     $dsn = "$db_driver:host=$db_host;port=$db_port;dbname=$db_name;sslmode=require";
@@ -91,8 +79,36 @@ CREATE TABLE IF NOT EXISTS forum_replies (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 ");
+
+    // Ensure admin user exists with known password
+    // Password: Admin123!
+    $adminEmail = 'admin@campushub.com';
+    $adminPassword = 'Admin123!';
+    $hashedAdminPassword = password_hash($adminPassword, PASSWORD_DEFAULT);
+
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE email = :email");
+    $stmt->execute([':email' => $adminEmail]);
+    $existingAdmin = $stmt->fetch();
+
+    if ($existingAdmin) {
+        // Update existing admin password
+        $update = $pdo->prepare("UPDATE users SET password = :password, role = 'admin', username = 'admin' WHERE email = :email");
+        $update->execute([
+            ':password' => $hashedAdminPassword,
+            ':email' => $adminEmail
+        ]);
+    } else {
+        // Create new admin
+        $insert = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (:username, :email, :password, :role)");
+        $insert->execute([
+            ':username' => 'admin',
+            ':email' => $adminEmail,
+            ':password' => $hashedAdminPassword,
+            ':role' => 'admin'
+        ]);
+    }
+
 } catch (PDOException $e) {
     error_log("Database connection error: " . $e->getMessage());
-    // Show more useful error temporarily
-    die("Could not connect to the database.<br><br><strong>Error:</strong> " . htmlspecialchars($e->getMessage()) . "<br><br>Host: " . htmlspecialchars($db_host) . " | User: " . htmlspecialchars($db_user) . " | Port: " . htmlspecialchars($db_port));
+    die("Could not connect to the database. Please try again later.");
 }
