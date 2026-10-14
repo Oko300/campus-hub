@@ -16,54 +16,50 @@ CampusHub is a School News, Gist, and Past Question Web Portal designed for stud
 ## Tech Stack
 
 - PHP 8.3+
-- PDO (Postgres compatible)
+- PDO (PostgreSQL via Supabase)
 - Bootstrap 5 + Font Awesome
 - Clean and organized code structure
 
-## Deployment
+## Database (Supabase)
 
-This application is designed for deployment on Render using Docker.
+This project now uses **Supabase** (PostgreSQL) as the database.
 
 ### Environment Variables
 
-The application relies on environment variables for sensitive data, especially database credentials. A `.env` file is used for local development, but these variables should be configured directly on Render for production.
-
-Example `.env` file:
+Create a `.env` file in the root with the following:
 
 ```
-DB_HOST=your_postgres_host
-DB_NAME=your_postgres_database_name
-DB_USER=your_postgres_username
-DB_PASS=your_postgres_password
+DB_DRIVER=pgsql
+DB_HOST=db.ovrvubkeipikltixgtfi.supabase.co
 DB_PORT=5432
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASS=your_supabase_database_password
 APP_ENV=production
-APP_URL=https://your-render-app-url.onrender.com
+APP_NAME=Bing Hub
+APP_SECRET=change_this_to_a_strong_random_string_32_chars_or_more
+SCHOOL_NAME=University of Excellence
+SCHOOL_SHORT=UOE
 ```
 
-### Docker Deployment on Render
+> The tables are automatically created on first connection. You can also run the SQL in `database/schema.sql` manually in the Supabase SQL Editor if you prefer.
 
-1.  **Build the Docker Image**: Render will automatically build the Docker image based on the `Dockerfile` in the root of the repository.
-2.  **Configure Environment Variables**: Set the environment variables (as listed above) in your Render service settings.
-3.  **Database Connection**: Ensure your Render Postgres database is correctly linked and accessible using the provided environment variables.
+## Deployment
+
+### Local Development with Docker
+
+```bash
+docker-compose up --build -d
+```
+
+Then open `http://localhost:8000`
+
+### Production (e.g. Render)
+
+Set the same environment variables above in your hosting provider dashboard.
 
 ## Installation (Local Development)
 
-1.  **Clone the repository**:
-    ```bash
-    git clone https://github.com/oko300/campus-hub.git
-    cd campus-hub
-    ```
-2.  **Create `.env` file**: Copy `.env.example` to `.env` and update with your local PostgreSQL credentials.
-    ```bash
-    cp .env.example .env
-    ```
-3.  **Build and run with Docker Compose (recommended)**:
-    (Note: A `docker-compose.yml` file will be provided later for easier local setup.)
-    ```bash
-    docker-compose up --build -d
-    ```
-4.  **Access the application**: Open your browser and navigate to `http://localhost:8000` (or the port configured in `docker-compose.yml`).
-
-## Contributing
-
-Feel free to contribute to the development of CampusHub.
+1. Clone the repository
+2. Copy `.env` and fill in your Supabase credentials
+3. Run with Docker Compose or a local PHP + Nginx setup

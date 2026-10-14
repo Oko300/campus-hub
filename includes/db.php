@@ -14,13 +14,15 @@ $db_port = getenv('DB_PORT');
 $db_driver = getenv('DB_DRIVER');
 
 try {
-    $dsn = "$db_driver:host=$db_host;port=$db_port;dbname=$db_name";
+    // sslmode=require is needed for Supabase
+    $dsn = "$db_driver:host=$db_host;port=$db_port;dbname=$db_name;sslmode=require";
     $pdo = new PDO($dsn, $db_user, $db_pass);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // Set default fetch mode to associative array
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
     // Auto-create tables if they don't exist
-$pdo->exec("
+    $pdo->exec("
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
